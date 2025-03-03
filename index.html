@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Counter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Overpass:ital,wght@0,100..900;1,100..900&family=Playwrite+IT+Moderna:wght@100..400&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+            font-family: "Lexend", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0821ff, #ff5e62);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -150px;
+            right: -150px;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+            animation: float 20s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(50px, 50px) scale(1.1);
+            }
+            50% {
+                transform: translate(0, 100px) scale(1);
+            }
+            75% {
+                transform: translate(-50px, 50px) scale(0.9);
+            }
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 1.2s ease forwards;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff5e62;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: glowText 2s ease-in-out infinite;
+        }
+
+        @keyframes glowText {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 94, 98, 0);
+            }
+            50% {
+                text-shadow: 0 0 15px rgba(255, 94, 98, 0.7);
+            }
+            100% {
+                text-shadow: 0 0 5px rgba(255, 94, 98, 0.3);
+            }
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+            animation: slideIn 1s ease 0.3s forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        #textInput {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+        }
+
+        #textInput:focus {
+            outline: none;
+            border-color: #ff5e62;
+            box-shadow: 0 0 10px rgba(255, 94, 98, 0.3);
+            transform: scale(1.01);
+        }
+
+        #textInput::placeholder {
+            color: #aaa;
+            transition: all 0.3s ease;
+        }
+
+        #textInput:focus::placeholder {
+            opacity: 0.5;
+            transform: translateX(10px);
+        }
+
+        .input-section p {
+            font-size: 1.1rem;
+            color: #444;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #0821ff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-section p:hover {
+            background-color: #f0f0f0;
+        }
+
+        #charCount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ff5e62;
+            position: relative;
+            padding: 0 10px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        #charCount::before {
+            content: '';
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, #0821ff, #ff5e62);
+            bottom: -2px;
+            left: 0;
+            transform-origin: right;
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .input-section p:hover #charCount::before {
+            transform-origin: left;
+            transform: scaleX(1);
+        }
+
+        /* Loader Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeOut 1s ease 0.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loader .circle {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 8px;
+            animation: bounce 0.6s ease infinite alternate;
+        }
+
+        .loader .circle:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loader .circle:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-30px);
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            #charCount {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loader">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <div class="container">
+        <h1>Character Counter</h1>
+        
+        <div class="input-section">
+            <input type="text" id="textInput" placeholder="Type something...">
+            <p>Character Count: <span id="charCount">0</span></p>
+        </div>
+    </div>
+
+<script>
+function countChars() {
+    var text = document.getElementById("textInput").value;
+    var charCount = document.getElementById("charCount");
+    
+    // Count the characters
+    var count = text.length;
+    
+    // Display with animation
+    charCount.textContent = "0";
+    let currentCount = 0;
+    
+    // Animate the counter
+    const animateCount = () => {
+        if (currentCount < count) {
+            currentCount = Math.min(currentCount + Math.max(1, Math.floor(count / 20)), count);
+            charCount.textContent = currentCount;
+            requestAnimationFrame(animateCount);
+        }
+    };
+    
+    animateCount();
+}
+
+// Add event listener
+document.getElementById("textInput").addEventListener('input', countChars);
+
+// Remove loader after page loads
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        document.querySelector('.loader').style.display = 'none';
+    }, 1500);
+});
+</script>
+</body>
+</html>
